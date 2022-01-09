@@ -1,8 +1,10 @@
+import { Position } from '../../commons/interfaces/Position';
 import { ICharacter } from '../../models/Character';
+import CharactersService from '../characters/CharactersService';
 import { MovementDirection } from './enums/MovementDirection.enum';
 
 export default class MovementService {
-  public static MoveCharacter(character: ICharacter, direction: MovementDirection): void {
+  public static async MoveCharacter(character: ICharacter, direction: MovementDirection): Promise<void> {
     switch (direction as MovementDirection) {
       case MovementDirection.UP:
         character.position.y -= 1;
@@ -21,6 +23,11 @@ export default class MovementService {
         if (character.position.x < 0) character.position.x = 0;
         break;
     }
-    character.save();
+    await character.save();
+  }
+
+  public static async GetAllCharactersPositions(): Promise<Position[]> {
+    const characters = await CharactersService.FindAllCharacters();
+    return characters.map((c) => c.position);
   }
 }

@@ -1,17 +1,17 @@
 import { Socket } from 'socket.io';
 import JwtRepository from '../security/JwtRepository';
 
-const socketioMiddleware = (socket: Socket): boolean => {
+const socketioMiddleware = (socket: Socket, next: any): void => {
   const token = socket.request.headers.authorization;
   if (!token) {
     socket.disconnect();
-    return false;
-  }
-  if (!JwtRepository.VerifyToken(token)) {
+    next(new Error());
+  } else if (!JwtRepository.VerifyToken(token)) {
     socket.disconnect();
-    return false;
+    next(new Error());
+  } else {
+    next();
   }
-  return true;
 };
 
 export default socketioMiddleware;

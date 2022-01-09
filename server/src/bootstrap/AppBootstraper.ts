@@ -5,7 +5,6 @@ import cors from 'cors';
 import DatabaseConnector from '../database/DatabaseConnector';
 import Logger from '../commons/Logger';
 import CharactersController from '../modules/characters/CharactersController';
-import CharactersListener from '../modules/characters/CharactersListener';
 import MovementListener from '../modules/movement/MovementListener';
 import socketioMiddleware from '../middleware/socketio.middleware';
 
@@ -26,11 +25,9 @@ export default class AppBootstraper {
   }
 
   public registerListeners(): void {
+    this.io.use(socketioMiddleware);
     this.io.on('connection', (socket) => {
-      if (socketioMiddleware(socket)) {
-        CharactersListener.Register(socket);
-        MovementListener.Register(socket);
-      }
+      MovementListener.Register(this.io, socket);
     });
   }
 

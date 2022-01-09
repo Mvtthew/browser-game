@@ -11,4 +11,9 @@ export default class CharactersService {
     const character = await CharacterModel.findOne({ name });
     return character;
   }
+
+  public static async FindAllCharacters(): Promise<ICharacter[]> {
+    const characters = await CharacterModel.find();
+    return characters;
+  }
 }

@@ -34,7 +34,8 @@ export default class AppBootstraper {
   }
 
   public startOnPort(port: number = 8080): void {
-    Logger.Log(`Starting app on port *::${port}`);
-    this.httpServer.listen(port);
+    this.httpServer.listen(port, () => {
+      Logger.Log(`Starting app on port *::${port}`);
+    });
   }
 }

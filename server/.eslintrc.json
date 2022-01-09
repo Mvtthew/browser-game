@@ -36,6 +36,9 @@
             "multiline-arguments"
         ],
         "max-len": ["error", {"code": 140}],
-        "lines-between-class-members": "off"
+        "lines-between-class-members": "off",
+        "no-underscore-dangle": "off",
+        "default-case": "off",
+        "no-param-reassign": "off"
     }
 }

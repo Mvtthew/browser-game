@@ -4,6 +4,10 @@ import http from 'http';
 import cors from 'cors';
 import DatabaseConnector from '../database/DatabaseConnector';
 import Logger from '../commons/Logger';
+import CharactersController from '../modules/characters/CharactersController';
+import CharactersListener from '../modules/characters/CharactersListener';
+import MovementListener from '../modules/movement/MovementListener';
+import socketioMiddleware from '../middleware/socketio.middleware';
 
 export default class AppBootstraper {
   public expressApp: express.Express;
@@ -14,18 +18,24 @@ export default class AppBootstraper {
     DatabaseConnector.Establish();
 
     this.expressApp = express();
-    this.httpServer = http.createServer(this.expressApp);
-    this.io = new socketio.Server(this.httpServer);
+    this.expressApp.use(express.json());
 
-    // Mockup
+    this.httpServer = http.createServer(this.expressApp);
+
+    this.io = new socketio.Server(this.httpServer);
+  }
+
+  public registerListeners(): void {
     this.io.on('connection', (socket) => {
-      socket.on('message', (message) => {
-        console.log(message);
-        socket.emit('hello', { message: 'Hello there!' });
-        socket.local.emit('hello', { message: 'Hello there!' });
-      });
-      socket.on('disconnect', () => console.log('bye!'));
+      if (socketioMiddleware(socket)) {
+        CharactersListener.Register(socket);
+        MovementListener.Register(socket);
+      }
     });
+  }
+
+  public registerControllers(): void {
+    CharactersController.Register(this.expressApp);
   }
 
   public enableCors(): void {

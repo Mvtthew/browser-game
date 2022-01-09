@@ -18,10 +18,15 @@ export default class AppBootstraper {
 
     this.expressApp = express();
     this.expressApp.use(express.json());
+    this.expressApp.use(cors());
 
     this.httpServer = http.createServer(this.expressApp);
 
-    this.io = new socketio.Server(this.httpServer);
+    this.io = new socketio.Server(this.httpServer, {
+      cors: {
+        origin: '*',
+      },
+    });
   }
 
   public registerListeners(): void {

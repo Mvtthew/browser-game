@@ -12,7 +12,7 @@ export default class MovementService {
         break;
       case MovementDirection.RIGHT:
         character.position.x += 1;
-        if (character.position.x < 0) character.position.y = 0;
+        if (character.position.x > 9) character.position.x = 9;
         break;
       case MovementDirection.DOWN:
         character.position.y += 1;

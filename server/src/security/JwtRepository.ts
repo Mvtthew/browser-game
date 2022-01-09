@@ -9,7 +9,7 @@ export default class JwtRepository {
   }
 
   public static async DecodeCharacterFromSocket(socket: Socket): Promise<ICharacter> {
-    const token = socket.request.headers.authorization || '';
+    const token = socket.handshake.auth.token || '';
     const id = jwt.verify(token, jwtConfig.secret);
     const character = await CharacterModel.findById(id);
     return character || new CharacterModel();
